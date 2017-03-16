@@ -1,56 +1,72 @@
 (function () {
-    "use strict";
+  "use strict"
 
-    var express = require('express');
-    var router = express.Router();
+  const express = require('express')
+  const router = express.Router()
 
-    var AddBookResource = require('../../resources/AddBookResource');
-    var EditBookResource = require('../../resources/EditBookResource');
-    var GetBookResource = require('../../resources/GetBookResource');
-    var GetBooksResource = require('../../resources/GetBooksResource');
-    var RemoveBookResource = require('../../resources/RemoveBookResource');
-
-
-
-    router.get('/', function (req, res) {
-        res.type('json');
-
-        GetBooksResource(function (data) {
-            res.send(data);
-        });
-    });
+  const AddBookResource = require('../../resources/AddBookResource')
+  const EditBookResource = require('../../resources/EditBookResource')
+  const GetBookResource = require('../../resources/GetBookResource')
+  const GetBooksResource = require('../../resources/GetBooksResource')
+  const RemoveBookResource = require('../../resources/RemoveBookResource')
 
 
-    router.put('/', function (req, res) {
-        res.type('json');
 
-        AddBookResource(function () {
-            res.send("{}");
-        });
-    });
+  router.get('/', function (req, res) {
+    res.type('json')
+
+    GetBooksResource(function (data) {
+      res.send(data)
+    })
+  })
 
 
-    router.route('/:bookId')
-        .get(function (req, res) {
-            res.type('json');
-            GetBookResource(req.params.bookId, function (data) {
-                res.send(data);
-            });
-        })
+  router.put('/', function (req, res) {
+    res.type('json')
 
-        .post(function (req, res) {
-            res.type('json');
-            EditBookResource(req.params.bookId, req.body, function () {
-                res.send("{}");
-            });
-        })
+    AddBookResource(req.body, function (data) {
+      if(typeof(data) == "undefined") {
+        res.sendStatus(404)
+      } else {
+        res.sendStatus(200)
+      }
+    })
+  })
 
-        .delete(function (req, res) {
-            res.type('json');
-            RemoveBookResource(req.params.bookId, function () {
-                res.send("{}");
-            });
-        });
 
-    module.exports = router;
-}());
+  router.route('/:bookId')
+    .get(function (req, res) {
+      res.type('json')
+      GetBookResource(req.params.bookId, function (data) {
+        if(typeof(data) == "undefined") {
+          res.sendStatus(404)
+        } else {
+          res.send(data)
+        }
+      })
+    })
+
+    .post(function (req, res) {
+      res.type('json')
+      EditBookResource(req.params.bookId, req.body, function (data) {
+        if(typeof(data) == "undefined") {
+          res.sendStatus(404)
+        } else {
+          res.sendStatus(200)
+        }
+      })
+    })
+
+    .delete(function (req, res) {
+      res.type('json')
+      RemoveBookResource(req.params.bookId, function (data) {
+        if(typeof(data) == "undefined") {
+          res.sendStatus(404)
+        } else {
+          res.sendStatus(200)
+        }
+      })
+    })
+
+  module.exports = router
+}())
