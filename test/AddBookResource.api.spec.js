@@ -55,7 +55,7 @@ describe("AddBook Resource",() => {
     })
     it("Given an invalid book returns HTTP 404", (done) => {
       chai.request(app)
-        .put('/api/books/1')
+        .put('/api/books/')
         .send({ string: "derp" })
         .then(function (res) {
           expect(res).to.have.status(404)

@@ -20,7 +20,6 @@
     })
   })
 
-
   router.put('/', function (req, res) {
     res.type('json')
 
